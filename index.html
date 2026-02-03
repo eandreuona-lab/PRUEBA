@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ona Hotels - Calculadoras de Eficiencia Energética</title>
+  <style>
+    /* Paleta de colores corporativa Ona Hotels */
+    :root {
+      --ona-teal-dark: #006B7D;
+      --ona-teal: #008B9C;
+      --ona-teal-light: #00A8BD;
+      --ona-teal-lighter: #E0F4F7;
+      --ona-white: #FFFFFF;
+      --ona-grey-light: #F8F9FA;
+      --ona-grey: #E9ECEF;
+      --ona-grey-dark: #6C757D;
+      --ona-text: #212529;
+      --ona-border: #DEE2E6;
+      --ona-success: #28A745;
+      --ona-warning: #FFC107;
+      --ona-danger: #DC3545;
+    }
+
+    * { 
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body { 
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, var(--ona-grey-light) 0%, var(--ona-grey) 100%);
+      color: var(--ona-text);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    header { 
+      background: var(--ona-white);
+      padding: 30px 40px;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 107, 125, 0.12);
+      margin-bottom: 40px;
+      text-align: center;
+    }
+
+    header img {
+      height: 70px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+    }
+
+    header h1 { 
+      font-size: 32px; 
+      font-weight: 700;
+      color: var(--ona-teal-dark);
+      margin-bottom: 10px;
+      line-height: 1.2;
+    }
+
+    header .subtitle {
+      font-size: 16px;
+      color: var(--ona-grey-dark);
+      line-height: 1.5;
+    }
+
+    /* Sección de información */
+    .info-section {
+      background: var(--ona-white);
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(0, 107, 125, 0.08);
+      margin-bottom: 40px;
+      border-left: 4px solid var(--ona-teal);
+    }
+
+    .info-section h2 {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--ona-teal-dark);
+      margin-bottom: 15px;
+    }
+
+    .info-section p {
+      font-size: 15px;
+      line-height: 1.7;
+      color: var(--ona-text);
+      margin-bottom: 10px;
+    }
+
+    .info-section ul {
+      list-style: none;
+      padding-left: 0;
+      margin-top: 15px;
+    }
+
+    .info-section ul li {
+      font-size: 14px;
+      line-height: 1.8;
+      color: var(--ona-text);
+      padding-left: 25px;
+      position: relative;
+      margin-bottom: 8px;
+    }
+
+    .info-section ul li::before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: var(--ona-success);
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    /* Grid de calculadoras */
+    .calculators-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 25px;
+      margin-bottom: 40px;
+    }
+
+    /* Tarjeta de calculadora */
+    .calc-card {
+      background: var(--ona-white);
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(0, 107, 125, 0.1);
+      border: 2px solid var(--ona-border);
+      overflow: hidden;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .calc-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 24px rgba(0, 107, 125, 0.2);
+      border-color: var(--ona-teal-light);
+    }
+
+    .calc-card-header {
+      padding: 25px 25px 15px 25px;
+      background: linear-gradient(135deg, var(--ona-teal-light) 0%, var(--ona-teal) 100%);
+      color: white;
+    }
+
+    .calc-card-badge {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.25);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+    }
+
+    .calc-card-title {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+
+    .calc-card-subtitle {
+      font-size: 13px;
+      opacity: 0.95;
+      line-height: 1.4;
+    }
+
+    .calc-card-body {
+      padding: 25px;
+    }
+
+    .calc-card-description {
+      font-size: 14px;
+      color: var(--ona-text);
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .calc-card-features {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 20px 0;
+    }
+
+    .calc-card-features li {
+      font-size: 13px;
+      color: var(--ona-grey-dark);
+      padding: 6px 0 6px 22px;
+      position: relative;
+      line-height: 1.5;
+    }
+
+    .calc-card-features li::before {
+      content: "•";
+      position: absolute;
+      left: 8px;
+      color: var(--ona-teal);
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    .calc-card-button {
+      width: 100%;
+      padding: 12px 20px;
+      background: var(--ona-teal);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .calc-card-button:hover {
+      background: var(--ona-teal-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 139, 156, 0.3);
+    }
+
+    .calc-card-status {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: var(--ona-success);
+      color: white;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
+    }
+
+    .calc-card-status.coming-soon {
+      background: var(--ona-warning);
+      color: var(--ona-text);
+    }
+
+    /* Iconos de las tarjetas */
+    .calc-icon {
+      font-size: 36px;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    /* Footer */
+    footer {
+      background: var(--ona-white);
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(0, 107, 125, 0.08);
+      text-align: center;
+      margin-top: 40px;
+    }
+
+    footer p {
+      font-size: 14px;
+      color: var(--ona-grey-dark);
+      margin-bottom: 10px;
+    }
+
+    footer .version {
+      font-size: 12px;
+      color: var(--ona-grey-dark);
+      opacity: 0.7;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      header h1 {
+        font-size: 24px;
+      }
+
+      header .subtitle {
+        font-size: 14px;
+      }
+
+      .calculators-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+
+      .calc-card-title {
+        font-size: 20px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 10px;
+      }
+
+      header {
+        padding: 20px;
+      }
+
+      header img {
+        height: 50px;
+      }
+
+      .info-section {
+        padding: 20px;
+      }
+
+      .calc-card-body {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header>
+      <img src="https://agi-prod-file-upload-public-main-use1.s3.amazonaws.com/b806f497-fbe0-4b2d-9354-245962d5b1a4" alt="Ona Hotels" />
+      <h1>Calculadoras de Eficiencia Energética</h1>
+      <p class="subtitle">Herramientas de cálculo basadas en Fichas Estandarizadas de Ahorro Energético | Sector Terciario</p>
+    </header>
+
+    <!-- Información general -->
+    <div class="info-section">
+      <h2>📋 Sobre las Fichas Estandarizadas</h2>
+      <p>Las fichas estandarizadas de medidas de ahorro y eficiencia energética son documentos técnicos que establecen la metodología de cálculo de los ahorros energéticos derivados de la implementación de medidas de eficiencia energética en diferentes sectores.</p>
+      <ul>
+        <li>Metodología de cálculo validada y normalizada</li>
+        <li>Aplicable al sector terciario (hoteles, oficinas, comercios, etc.)</li>
+        <li>Incluye factores de conversión de energía primaria y emisiones de CO₂</li>
+        <li>Permite justificar ahorros para auditorías energéticas</li>
+        <li>Compatible con sistemas de certificación energética</li>
+      </ul>
+    </div>
+
+    <!-- Grid de calculadoras -->
+    <div class="calculators-grid">
+      
+      <!-- TER030 - Iluminación LED -->
+      <div class="calc-card" onclick="openCalculator('ter030')">
+        <div class="calc-card-status coming-soon">Próximamente</div>
+        <div class="calc-card-header">
+          <div class="calc-card-badge">FICHA TER030</div>
+          <div class="calc-icon">💡</div>
+          <h3 class="calc-card-title">Iluminación LED</h3>
+          <p class="calc-card-subtitle">Sustitución del sistema de iluminación convencional por tecnología LED</p>
+        </div>
+        <div class="calc-card-body">
+          <p class="calc-card-description">Calcula el ahorro energético y económico derivado de la sustitución de luminarias convencionales por tecnología LED de alta eficiencia.</p>
+          <ul class="calc-card-features">
+            <li>Comparativa potencia instalada</li>
+            <li>Ahorro energético y económico</li>
+            <li>Reducción emisiones CO₂</li>
+            <li>Análisis por ubicaciones</li>
+            <li>Proyección de ahorros a 10-20 años</li>
+            <li>Exportación PDF/CSV/Excel</li>
+          </ul>
+          <button class="calc-card-button">
+            <span>Abrir Calculadora</span>
+            <span>→</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- TER040 - Bomba de Calor Climatización -->
+      <div class="calc-card" onclick="openCalculator('ter040')">
+        <div class="calc-card-status">Disponible</div>
+        <div class="calc-card-header">
+          <div class="calc-card-badge">FICHA TER040</div>
+          <div class="calc-icon">❄️</div>
+          <h3 class="calc-card-title">Bomba de Calor - Climatización</h3>
+          <p class="calc-card-subtitle">Sustitución de generador de climatización por bomba de calor eléctrica</p>
+        </div>
+        <div class="calc-card-body">
+          <p class="calc-card-description">Evalúa el ahorro al sustituir sistemas de climatización convencionales (calefacción y refrigeración) por bombas de calor de alta eficiencia.</p>
+          <ul class="calc-card-features">
+            <li>Calefacción y refrigeración</li>
+            <li>Agua caliente sanitaria (ACS)</li>
+            <li>Calentamiento de piscina</li>
+            <li>Análisis SCOP/SEER</li>
+            <li>Múltiples tipos de bomba de calor</li>
+            <li>Zonas climáticas españolas</li>
+          </ul>
+          <button class="calc-card-button">
+            <span>Abrir Calculadora</span>
+            <span>→</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- TER100 - Bomba de Calor Instalación Térmica -->
+      <div class="calc-card" onclick="openCalculator('ter100')">
+        <div class="calc-card-status coming-soon">Próximamente</div>
+        <div class="calc-card-header">
+          <div class="calc-card-badge">FICHA TER100</div>
+          <div class="calc-icon">🔥</div>
+          <h3 class="calc-card-title">Bomba de Calor - Térmica Colectiva</h3>
+          <p class="calc-card-subtitle">Sustitución de caldera de combustión por bomba de calor en instalación térmica colectiva</p>
+        </div>
+        <div class="calc-card-body">
+          <p class="calc-card-description">Calcula el ahorro al reemplazar calderas de combustión (gas natural, gasoil, propano) por bombas de calor en instalaciones centralizadas.</p>
+          <ul class="calc-card-features">
+            <li>Múltiples tipos de combustible</li>
+            <li>Análisis energía final y primaria</li>
+            <li>Comparativa costes operacionales</li>
+            <li>Balance de emisiones CO₂</li>
+            <li>Análisis por zonas climáticas</li>
+            <li>Exportación PDF/CSV</li>
+          </ul>
+          <button class="calc-card-button">
+            <span>Abrir Calculadora</span>
+            <span>→</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Próxima calculadora -->
+      <div class="calc-card" style="opacity: 0.7; cursor: not-allowed;" onclick="alert('Esta calculadora estará disponible próximamente')">
+        <div class="calc-card-status coming-soon">En desarrollo</div>
+        <div class="calc-card-header" style="background: linear-gradient(135deg, var(--ona-grey) 0%, var(--ona-grey-dark) 100%);">
+          <div class="calc-card-badge">PRÓXIMAMENTE</div>
+          <div class="calc-icon">🔧</div>
+          <h3 class="calc-card-title">Más calculadoras</h3>
+          <p class="calc-card-subtitle">Próximas herramientas de cálculo energético</p>
+        </div>
+        <div class="calc-card-body">
+          <p class="calc-card-description">Estamos desarrollando más calculadoras basadas en fichas estandarizadas para ampliar las herramientas disponibles.</p>
+          <ul class="calc-card-features">
+            <li>Aislamiento térmico</li>
+            <li>Sistemas de control</li>
+            <li>Cogeneración</li>
+            <li>Energía solar térmica</li>
+            <li>Y mucho más...</li>
+          </ul>
+          <button class="calc-card-button" style="background: var(--ona-grey-dark); cursor: not-allowed;">
+            <span>Próximamente</span>
+            <span>⏳</span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Información adicional -->
+    <div class="info-section">
+      <h2>🎯 Funcionalidades Comunes</h2>
+      <p>Todas las herramientas incorporan:</p>
+      <ul>
+        <li><strong>Cálculos automatizados:</strong> Resultados inmediatos según metodología oficial</li>
+        <li><strong>Visualización gráfica:</strong> Gráficos comparativos y proyecciones temporales</li>
+        <li><strong>Análisis detallado:</strong> Desglose completo de consumos, costes y emisiones</li>
+        <li><strong>Exportación múltiple:</strong> Informes en formato PDF, CSV y Excel</li>
+        <li><strong>Diseño responsive:</strong> Optimizado para ordenadores, tablets y móviles</li>
+        <li><strong>Sin instalación:</strong> Funcionan directamente en el navegador</li>
+      </ul>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+      <p><strong>Ona Hotels</strong> - Herramientas de Eficiencia Energética</p>
+      <p class="version">Desarrollado para el sector hotelero | Código abierto y personalizable</p>
+      <p class="version">v1.0.0 | Febrero 2026</p>
+    </footer>
+  </div>
+
+  <script>
+    function openCalculator(type) {
+      // Aquí puedes definir las URLs de tus calculadoras
+      const calculators = {
+        'ter030': '#', // URL de la calculadora TER030 cuando esté disponible
+        'ter040': '#', // URL actual de la calculadora TER040
+        'ter100': '#'  // URL de la calculadora TER100 cuando esté disponible
+      };
+
+      // Si la calculadora está disponible, navegar a ella
+      if (type === 'ter040') {
+        // Esta es la calculadora actual que ya tienes
+        alert('Esta es tu calculadora actual de TER040.\n\nPara integrarla:\n1. Guarda este archivo HTML como "index.html"\n2. Guarda tu calculadora TER040 como "ter040.html"\n3. Actualiza la línea del objeto calculators con la ruta correcta');
+        // Descomentar cuando tengas los archivos separados:
+        // window.location.href = calculators[type];
+      } else if (type === 'ter030' || type === 'ter100') {
+        alert('Esta calculadora estará disponible próximamente.\n\nPuedes desarrollarla siguiendo el mismo patrón de la TER040.');
+      }
+    }
+
+    // Animación de entrada
+    document.addEventListener('DOMContentLoaded', function() {
+      const cards = document.querySelectorAll('.calc-card');
+      cards.forEach((card, index) => {
+        setTimeout(() => {
+          card.style.opacity = '0';
+          card.style.transform = 'translateY(20px)';
+          card.style.transition = 'all 0.5s ease';
+          
+          setTimeout(() => {
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+          }, 50);
+        }, index * 100);
+      });
+    });
+  </script>
+</body>
+</html>
